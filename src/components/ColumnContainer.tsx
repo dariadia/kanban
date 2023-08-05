@@ -3,7 +3,7 @@ import { TrashIcon, PlusIcon } from "./icons"
 import { Column, ItemUuid, Task } from "../types/board"
 import { CSS } from "@dnd-kit/utilities"
 import { useMemo, useState } from "react"
-import TaskCard from "./TaskCard"
+import { TaskCard } from "."
 
 interface Props {
   column: Column

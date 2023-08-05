@@ -114,5 +114,3 @@ export const TaskCard: React.FC<Props> = ({ task, deleteTask, updateTask }) =>  
     </div>
   )
 }
-
-export default TaskCard
