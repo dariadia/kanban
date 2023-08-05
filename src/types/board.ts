@@ -1,7 +1,7 @@
 export type ItemUuid = string
 export type Task = {
   selfUuid: ItemUuid
-  columnId: ItemUuid
+  columnUuid: ItemUuid
   inner: string
 }  
 export type Column = {
