@@ -46,9 +46,7 @@ export const TaskCard: React.FC<Props> = ({ task, deleteTask, updateTask }) =>  
         ref={setNodeRef}
         style={style}
         className="
-        opacity-30
-      bg-mainBackgroundColor p-2.5 h-[100px] min-h-[100px] items-center flex text-left rounded-xl border-2 border-indigo-500  cursor-grab relative
-      "
+        opacity-30 bg-mainBackgroundColor p-2.5 h-[100px] min-h-[100px] items-center flex text-left rounded-xl border-2 border-indigo-500  cursor-grab relative"
       />
     )
   }
@@ -63,10 +61,7 @@ export const TaskCard: React.FC<Props> = ({ task, deleteTask, updateTask }) =>  
         className="bg-mainBackgroundColor p-2.5 h-[100px] min-h-[100px] items-center flex text-left rounded-xl hover:ring-2 hover:ring-inset hover:ring-indigo-700 cursor-grab relative"
       >
         <textarea
-          className="
-        h-[90%]
-        w-full resize-none border-none rounded bg-transparent text-white focus:outline-none
-        "
+          className="h-[90%] w-full resize-none border-none rounded bg-transparent text-white focus:outline-none"
           value={task.inner}
           autoFocus
           placeholder="Task inner here"

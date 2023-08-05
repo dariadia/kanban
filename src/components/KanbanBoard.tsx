@@ -23,7 +23,6 @@ export const KanbanBoard: React.FC = () => {
   const columnsUuid = useMemo(() => columns.map(col => col.selfUuid), [columns])
   const [tasks, setTasks] = useState<Task[]>(defaultTasks)
   const [activeColumn, setActiveColumn] = useState<Column | null>(null)
-
   const [activeTask, setActiveTask] = useState<Task | null>(null)
 
   const sensors = useSensors(
@@ -74,21 +73,7 @@ export const KanbanBoard: React.FC = () => {
             onClick={() => {
               createNewColumn()
             }}
-            className="
-      h-[60px]
-      w-[350px]
-      min-w-[350px]
-      cursor-pointer
-      rounded-lg
-      bg-mainBackgroundColor
-      border-2
-      border-columnBackgroundColor
-      p-4
-      ring-indigo-700
-      hover:ring-2
-      flex
-      gap-2
-      "
+            className="h-[60px] w-[350px] min-w-[350px] cursor-pointer rounded-lg bg-mainBackgroundColor border-2 border-columnBackgroundColor p-4 ring-indigo-700 hover:ring-2 flex gap-2"
           >
             <PlusIcon />
             Add Column
@@ -126,7 +111,7 @@ export const KanbanBoard: React.FC = () => {
 
   function createTask(columnUuid: ItemUuid) {
     const newTask: Task = {
-      selfUuid: `${generateUuid()}`,
+      selfUuid: generateUuid(),
       columnUuid,
       inner: `Task ${tasks.length + 1}`,
     }
@@ -150,7 +135,7 @@ export const KanbanBoard: React.FC = () => {
 
   function createNewColumn() {
     const columnToAdd: Column = {
-      selfUuid: `${generateUuid()}`,
+      selfUuid: generateUuid(),
       title: `Column ${columns.length + 1}`,
     }
 
@@ -207,26 +192,18 @@ export const KanbanBoard: React.FC = () => {
 
   function onDragOver(event: DragOverEvent) {
     const { active, over } = event
-    if (!over) return
-
+    if (!over) return null
     const activeUuid = active.id
     const overUuid = over.id
-
-    if (activeUuid === overUuid) return
-
+    if (activeUuid === overUuid) return null
     const isActiveATask = active.data.current?.type === "Task"
     const isOverATask = over.data.current?.type === "Task"
-
-    if (!isActiveATask) return
-
-    // Im dropping a Task over another Task
+    if (!isActiveATask) return null
     if (isActiveATask && isOverATask) {
       setTasks((tasks) => {
         const activeIndex = tasks.findIndex((task) => task.selfUuid === activeUuid)
         const overIndex = tasks.findIndex((task) => task.selfUuid === overUuid)
-
         tasks[activeIndex].columnUuid = tasks[overIndex].columnUuid
-
         return arrayMove(tasks, activeIndex, overIndex)
       })
     }

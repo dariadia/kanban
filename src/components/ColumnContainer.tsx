@@ -5,14 +5,14 @@ import { CSS } from "@dnd-kit/utilities"
 import { useMemo, useState } from "react"
 import { TaskCard } from "."
 
-interface Props {
+type Props = {
+  tasks: Task[]
   column: Column
   deleteColumn: (uuid: ItemUuid) => void
   updateColumn: (uuid: ItemUuid, title: string) => void
   createTask: (columnUuuuid: ItemUuid) => void
   updateTask: (uuid: ItemUuid, inner: string) => void
   deleteTask: (uuid: ItemUuid) => void
-  tasks: Task[]
 }
 
 export const ColumnContainer: React.FC<Props> = ({
@@ -25,7 +25,6 @@ export const ColumnContainer: React.FC<Props> = ({
   updateTask,
 }) => {
   const [editMode, setEditMode] = useState(false)
-
   const tasksUuids = useMemo(() => {
     return tasks.map((task) => task.selfUuid)
   }, [tasks])
@@ -56,7 +55,7 @@ export const ColumnContainer: React.FC<Props> = ({
       <div
         ref={setNodeRef}
         style={style}
-        className="bg-columnBackgroundColor opacity-40 border-2 border-pink-500 w-[350px] h-[500px] max-h-[500px] rounded-md flex flex-col"
+        className="bg-columnBackgroundColor opacity-40 border-2 border-indigo-500 w-[350px] h-[500px] max-h-[500px] rounded-md flex flex-col"
       ></div>
     )
   }
