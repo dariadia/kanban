@@ -15,7 +15,7 @@ interface Props {
   tasks: Task[]
 }
 
-export const  ColumnContainer: React.FC<Props> = ({
+export const ColumnContainer: React.FC<Props> = ({
   column,
   deleteColumn,
   updateColumn,
@@ -56,18 +56,7 @@ export const  ColumnContainer: React.FC<Props> = ({
       <div
         ref={setNodeRef}
         style={style}
-        className="
-      bg-columnBackgroundColor
-      opacity-40
-      border-2
-      border-pink-500
-      w-[350px]
-      h-[500px]
-      max-h-[500px]
-      rounded-md
-      flex
-      flex-col
-      "
+        className="bg-columnBackgroundColor opacity-40 border-2 border-pink-500 w-[350px] h-[500px] max-h-[500px] rounded-md flex flex-col"
       ></div>
     )
   }
@@ -76,15 +65,7 @@ export const  ColumnContainer: React.FC<Props> = ({
     <div
       ref={setNodeRef}
       style={style}
-      className="
-  bg-columnBackgroundColor
-  w-[350px]
-  h-[500px]
-  max-h-[500px]
-  rounded-md
-  flex
-  flex-col
-  "
+      className="bg-columnBackgroundColor w-[350px] h-[500px] max-h-[500px] rounded-md flex flex-col"
     >
       <div
         {...attributes}
@@ -92,37 +73,9 @@ export const  ColumnContainer: React.FC<Props> = ({
         onClick={() => {
           setEditMode(true)
         }}
-        className="
-      bg-mainBackgroundColor
-      text-md
-      h-[60px]
-      cursor-grab
-      rounded-md
-      rounded-b-none
-      p-3
-      font-bold
-      border-columnBackgroundColor
-      border-4
-      flex
-      items-center
-      justify-between
-      "
+        className="bg-mainBackgroundColor text-md h-[60px] cursor-grab rounded-md rounded-b-none p-3 font-bold border-columnBackgroundColor border-4 flex items-center justify-between"
       >
         <div className="flex gap-2">
-          <div
-            className="
-        flex
-        justify-center
-        items-center
-        bg-columnBackgroundColor
-        px-2
-        py-1
-        text-sm
-        rounded-full
-        "
-          >
-            0
-          </div>
           {!editMode && column.title}
           {editMode && (
             <input
@@ -140,24 +93,26 @@ export const  ColumnContainer: React.FC<Props> = ({
             />
           )}
         </div>
-        <button
-          onClick={() => {
-            deleteColumn(column.selfUuid)
-          }}
-          className="
-        stroke-gray-500
-        hover:stroke-white
-        hover:bg-columnBackgroundColor
-        rounded
-        px-1
-        py-2
-        "
-        >
-          <TrashIcon />
-        </button>
+        <div className="flex gap-2">
+          <button
+            onClick={() => {
+              deleteColumn(column.selfUuid)
+            }}
+            className="stroke-gray-500 hover:stroke-lilac-500 rounded px-1 py-2"
+          >
+            <TrashIcon />
+          </button>
+          <button
+            className="flex gap-2 text-gray-500 items-center rounded-md hover:text-lilac-500"
+            onClick={() => {
+              createTask(column.selfUuid)
+            }}
+          >
+            <PlusIcon />
+            Add task
+          </button>
+        </div>
       </div>
-
-      {/* Column task container */}
       <div className="flex flex-grow flex-col gap-4 p-2 overflow-x-hidden overflow-y-auto">
         <SortableContext items={tasksUuids}>
           {tasks.map((task) => (
@@ -170,16 +125,6 @@ export const  ColumnContainer: React.FC<Props> = ({
           ))}
         </SortableContext>
       </div>
-      {/* Column footer */}
-      <button
-        className="flex gap-2 items-center border-columnBackgroundColor border-2 rounded-md p-4 border-x-columnBackgroundColor hover:bg-mainBackgroundColor hover:text-indigo-500 active:bg-black"
-        onClick={() => {
-          createTask(column.selfUuid)
-        }}
-      >
-        <PlusIcon />
-        Add task
-      </button>
     </div>
   )
 }
