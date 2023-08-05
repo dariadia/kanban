@@ -1,16 +1,16 @@
 import { useState } from "react"
-import { TrashIcon } from "../assets/icons"
+import { TrashIcon } from "./icons"
 import { ItemUuid, Task } from "../types/board"
 import { useSortable } from "@dnd-kit/sortable"
 import { CSS } from "@dnd-kit/utilities"
 
-interface Props {
+type Props = {
   task: Task
   deleteTask: (uuid: ItemUuid) => void
   updateTask: (uuid: ItemUuid, inner: string) => void
 }
 
-function TaskCard({ task, deleteTask, updateTask }: Props) {
+export const TaskCard: React.FC<Props> = ({ task, deleteTask, updateTask }) =>  {
   const [mouseIsOver, setMouseIsOver] = useState(false)
   const [editMode, setEditMode] = useState(false)
 

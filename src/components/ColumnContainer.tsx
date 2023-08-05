@@ -1,5 +1,5 @@
 import { SortableContext, useSortable } from "@dnd-kit/sortable"
-import { TrashIcon, PlusIcon } from "../assets/icons"
+import { TrashIcon, PlusIcon } from "./icons"
 import { Column, ItemUuid, Task } from "../types/board"
 import { CSS } from "@dnd-kit/utilities"
 import { useMemo, useState } from "react"
@@ -15,7 +15,7 @@ interface Props {
   tasks: Task[]
 }
 
-function ColumnContainer({
+export const  ColumnContainer: React.FC<Props> = ({
   column,
   deleteColumn,
   updateColumn,
@@ -23,7 +23,7 @@ function ColumnContainer({
   tasks,
   deleteTask,
   updateTask,
-}: Props) {
+}) => {
   const [editMode, setEditMode] = useState(false)
 
   const tasksUuids = useMemo(() => {
@@ -86,7 +86,6 @@ function ColumnContainer({
   flex-col
   "
     >
-      {/* Column title */}
       <div
         {...attributes}
         {...listeners}
@@ -184,5 +183,3 @@ function ColumnContainer({
     </div>
   )
 }
-
-export default ColumnContainer
