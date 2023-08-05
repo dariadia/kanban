@@ -84,7 +84,7 @@ export const KanbanBoard: React.FC = () => {
       border-2
       border-columnBackgroundColor
       p-4
-      ring-rose-500
+      ring-indigo-700
       hover:ring-2
       flex
       gap-2
