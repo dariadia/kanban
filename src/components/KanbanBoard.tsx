@@ -15,6 +15,7 @@ import {
 import { SortableContext, arrayMove } from "@dnd-kit/sortable"
 import { createPortal } from "react-dom"
 import TaskCard from "./TaskCard"
+import { generateUuid } from "../helpers/uuid-helper"
 
 const defaultCols: Column[] = [
   {
@@ -323,10 +324,3 @@ export const KanbanBoard: React.FC = () => {
     }
   }
 }
-
-function generateUuid() {
-  /* Generate a random number between 0 and 10000 */
-  return Math.floor(Math.random() * 10001)
-}
-
-export default KanbanBoard
