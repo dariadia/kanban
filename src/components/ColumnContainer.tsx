@@ -78,7 +78,7 @@ export const ColumnContainer: React.FC<Props> = (props) => {
           {!isEditMode && column.title}
           {isEditMode && (
             <input
-              className="bg-black focus:border-indigo-500 border rounded outline-none px-2"
+              className="bg-white focus:border-indigo-500 border rounded outline-none px-2"
               value={column.title}
               onChange={(e) => updateColumn(column.selfUuid, e.target.value)}
               autoFocus
