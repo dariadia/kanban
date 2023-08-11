@@ -3,6 +3,7 @@ import { TrashIcon } from "./icons"
 import { ItemUuid, Task } from "../types/board"
 import { useSortable } from "@dnd-kit/sortable"
 import { CSS } from "@dnd-kit/utilities"
+import { TASK } from "./constants"
 
 type Props = {
   task: Task
@@ -11,8 +12,8 @@ type Props = {
 }
 
 export const TaskCard: React.FC<Props> = ({ task, deleteTask, updateTask }) =>  {
-  const [mouseIsOver, setMouseIsOver] = useState(false)
-  const [editMode, setEditMode] = useState(false)
+  const [isMouseOver, setMouseIsOver] = useState(false)
+  const [isEditMode, setEditMode] = useState(false)
 
   const {
     setNodeRef,
@@ -24,10 +25,10 @@ export const TaskCard: React.FC<Props> = ({ task, deleteTask, updateTask }) =>  
   } = useSortable({
     id: task.selfUuid,
     data: {
-      type: "Task",
+      type: TASK,
       task,
     },
-    disabled: editMode,
+    disabled: isEditMode,
   })
 
   const style = {
@@ -51,7 +52,7 @@ export const TaskCard: React.FC<Props> = ({ task, deleteTask, updateTask }) =>  
     )
   }
 
-  if (editMode) {
+  if (isEditMode) {
     return (
       <div
         ref={setNodeRef}
@@ -85,22 +86,15 @@ export const TaskCard: React.FC<Props> = ({ task, deleteTask, updateTask }) =>  
       {...listeners}
       onClick={toggleEditMode}
       className="bg-mainBackgroundColor p-2.5 h-[100px] min-h-[100px] items-center flex text-left rounded-xl hover:ring-2 hover:ring-inset hover:ring-indigo-700 cursor-grab relative task"
-      onMouseEnter={() => {
-        setMouseIsOver(true)
-      }}
-      onMouseLeave={() => {
-        setMouseIsOver(false)
-      }}
+      onMouseEnter={() => setMouseIsOver(true)}
+      onMouseLeave={() => setMouseIsOver(false)}
     >
       <p className="my-auto h-[90%] w-full overflow-y-auto overflow-x-hidden whitespace-pre-wrap">
         {task.inner}
       </p>
-
-      {mouseIsOver && (
+      {isMouseOver && (
         <button
-          onClick={() => {
-            deleteTask(task.selfUuid)
-          }}
+          onClick={() => deleteTask(task.selfUuid)}
           className="stroke-white absolute right-4 top-1/2 -translate-y-1/2 bg-columnBackgroundColor p-2 rounded opacity-60 hover:opacity-100"
         >
           <TrashIcon />

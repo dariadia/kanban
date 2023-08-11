@@ -16,14 +16,15 @@ import { SortableContext, arrayMove } from "@dnd-kit/sortable"
 import { createPortal } from "react-dom"
 import { TaskCard } from "."
 import { generateUuid } from "../helpers/uuid-helper"
-import { defaultCols, defaultTasks } from "./data/tasks"
+import { defaultCols, defaultTasks } from "../data/tasks"
+import { COLUMN, TASK } from "./constants"
 
 export const KanbanBoard: React.FC = () => {
   const [columns, setColumns] = useState<Column[]>(defaultCols)
   const columnsUuid = useMemo(() => columns.map(col => col.selfUuid), [columns])
   const [tasks, setTasks] = useState<Task[]>(defaultTasks)
-  const [activeColumn, setActiveColumn] = useState<Column | null>(null)
-  const [activeTask, setActiveTask] = useState<Task | null>(null)
+  const [isActiveColumn, setActiveColumn] = useState<Column | null>(null)
+  const [isActiveTask, setActiveTask] = useState<Task | null>(null)
 
   const sensors = useSensors(
     useSensor(PointerSensor, {
@@ -35,16 +36,7 @@ export const KanbanBoard: React.FC = () => {
 
   return (
     <div
-      className="
-        m-auto
-        flex
-        min-h-screen
-        w-full
-        items-center
-        overflow-x-auto
-        overflow-y-hidden
-        px-[40px]
-    "
+      className="m-auto flex min-h-screen w-full items-center overflow-x-auto overflow-y-hidden px-[40px]"
     >
       <DndContext
         sensors={sensors}
@@ -79,25 +71,24 @@ export const KanbanBoard: React.FC = () => {
             Add Column
           </button>
         </div>
-
         {createPortal(
           <DragOverlay>
-            {activeColumn && (
+            {isActiveColumn && (
               <ColumnContainer
-                column={activeColumn}
+                column={isActiveColumn}
                 deleteColumn={deleteColumn}
                 updateColumn={updateColumn}
                 createTask={createTask}
                 deleteTask={deleteTask}
                 updateTask={updateTask}
                 tasks={tasks.filter(
-                  (task) => task.columnUuid === activeColumn.selfUuid
+                  (task) => task.columnUuid === isActiveColumn.selfUuid
                 )}
               />
             )}
-            {activeTask && (
+            {isActiveTask && (
               <TaskCard
-                task={activeTask}
+                task={isActiveTask}
                 deleteTask={deleteTask}
                 updateTask={updateTask}
               />
@@ -109,31 +100,28 @@ export const KanbanBoard: React.FC = () => {
     </div>
   )
 
-  function createTask(columnUuid: ItemUuid) {
+  function createTask(columnUuid: ItemUuid): void {
     const newTask: Task = {
       selfUuid: generateUuid(),
       columnUuid,
       inner: `Task ${tasks.length + 1}`,
     }
-
     setTasks([...tasks, newTask])
   }
 
-  function deleteTask(uuid: ItemUuid) {
+  function deleteTask(uuid: ItemUuid): void {
     const newTasks = tasks.filter((task) => task.selfUuid !== uuid)
     setTasks(newTasks)
   }
 
-  function updateTask(uuid: ItemUuid, inner: string) {
-    const newTasks = tasks.map((task) => {
-      if (task.selfUuid !== uuid) return task
-      return { ...task, inner }
-    })
-
+  function updateTask(uuid: ItemUuid, inner: string): void {
+    const newTasks = tasks
+      .map((task) => task.selfUuid !== uuid 
+        ? task : { ...task, inner })
     setTasks(newTasks)
   }
 
-  function createNewColumn() {
+  function createNewColumn(): void {
     const columnToAdd: Column = {
       selfUuid: generateUuid(),
       title: `Column ${columns.length + 1}`,
@@ -142,7 +130,7 @@ export const KanbanBoard: React.FC = () => {
     setColumns([...columns, columnToAdd])
   }
 
-  function deleteColumn(uuid: ItemUuid) {
+  function deleteColumn(uuid: ItemUuid): void {
     const filteredColumns = columns.filter(col => col.selfUuid !== uuid)
     setColumns(filteredColumns)
 
@@ -150,7 +138,7 @@ export const KanbanBoard: React.FC = () => {
     setTasks(newTasks)
   }
 
-  function updateColumn(uuid: ItemUuid, title: string) {
+  function updateColumn(uuid: ItemUuid, title: string): void  {
     const newColumns = columns.map((col) => {
       if (col.selfUuid !== uuid) return col
       return { ...col, title }
@@ -159,19 +147,17 @@ export const KanbanBoard: React.FC = () => {
     setColumns(newColumns)
   }
 
-  function onDragStart(event: DragStartEvent) {
-    if (event.active.data.current?.type === "Column") {
-      setActiveColumn(event.active.data.current.column)
-      return
+  function onDragStart(event: DragStartEvent): void {
+    if (event.active.data.current?.type === COLUMN) {
+      return setActiveColumn(event.active.data.current.column)
     }
 
-    if (event.active.data.current?.type === "Task") {
-      setActiveTask(event.active.data.current.task)
-      return
+    if (event.active.data.current?.type === TASK) {
+      return setActiveTask(event.active.data.current.task)
     }
   }
 
-  function onDragEnd(event: DragEndEvent) {
+  function onDragEnd(event: DragEndEvent): void {
     setActiveColumn(null)
     setActiveTask(null)
 
@@ -184,20 +170,20 @@ export const KanbanBoard: React.FC = () => {
     if (activeUuid === overUuid) return
 
     setColumns((columns) => {
-      const activeColumnIndex = columns.findIndex(col => col.selfUuid === activeUuid)
+      const isActiveColumnIndex = columns.findIndex(col => col.selfUuid === activeUuid)
       const overColumnIndex = columns.findIndex(col => col.selfUuid === overUuid)
-      return arrayMove(columns, activeColumnIndex, overColumnIndex)
+      return arrayMove(columns, isActiveColumnIndex, overColumnIndex)
     })
   }
 
-  function onDragOver(event: DragOverEvent) {
+  function onDragOver(event: DragOverEvent): null | undefined  {
     const { active, over } = event
     if (!over) return null
     const activeUuid = active.id
     const overUuid = over.id
     if (activeUuid === overUuid) return null
-    const isActiveATask = active.data.current?.type === "Task"
-    const isOverATask = over.data.current?.type === "Task"
+    const isActiveATask = active.data.current?.type === TASK
+    const isOverATask = over.data.current?.type === TASK
     if (!isActiveATask) return null
     if (isActiveATask && isOverATask) {
       setTasks((tasks) => {
@@ -208,7 +194,7 @@ export const KanbanBoard: React.FC = () => {
       })
     }
 
-    const isOverAColumn = over.data.current?.type === "Column"
+    const isOverAColumn = over.data.current?.type === COLUMN
     if (isActiveATask && isOverAColumn) {
       setTasks((tasks) => {
         const activeIndex = tasks.findIndex(task => task.selfUuid === activeUuid)
