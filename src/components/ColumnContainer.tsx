@@ -4,6 +4,7 @@ import { Column, ItemUuid, Task } from "../types/board"
 import { CSS } from "@dnd-kit/utilities"
 import { useMemo, useState } from "react"
 import { TaskCard } from "."
+import { COLUMN } from "./constants"
 
 type Props = {
   tasks: Task[]
@@ -15,19 +16,18 @@ type Props = {
   deleteTask: (uuid: ItemUuid) => void
 }
 
-export const ColumnContainer: React.FC<Props> = ({
-  column,
-  deleteColumn,
-  updateColumn,
-  createTask,
-  tasks,
-  deleteTask,
-  updateTask,
-}) => {
-  const [editMode, setEditMode] = useState(false)
-  const tasksUuids = useMemo(() => {
-    return tasks.map((task) => task.selfUuid)
-  }, [tasks])
+export const ColumnContainer: React.FC<Props> = (props) => {
+  const {
+    column,
+    deleteColumn,
+    updateColumn,
+    createTask,
+    tasks,
+    deleteTask,
+    updateTask,
+  } = props
+  const [isEditMode, setEditMode] = useState(false)
+  const tasksUuids = useMemo(() => tasks.map((task) => task.selfUuid), [tasks])
 
   const {
     setNodeRef,
@@ -39,10 +39,10 @@ export const ColumnContainer: React.FC<Props> = ({
   } = useSortable({
     id: column.selfUuid,
     data: {
-      type: "Column",
+      type: COLUMN,
       column,
     },
-    disabled: editMode,
+    disabled: isEditMode,
   })
 
   const style = {
@@ -55,8 +55,8 @@ export const ColumnContainer: React.FC<Props> = ({
       <div
         ref={setNodeRef}
         style={style}
-        className="bg-columnBackgroundColor opacity-40 border-2 border-indigo-500 w-[350px] h-[500px] max-h-[500px] rounded-md flex flex-col"
-      ></div>
+        className="w-[350px] h-[500px] bg-columnBackgroundColor flex flex-col opacity-40 border-2 border-indigo-500 max-h-[500px] rounded-md"
+      />
     )
   }
 
@@ -64,7 +64,7 @@ export const ColumnContainer: React.FC<Props> = ({
     <div
       ref={setNodeRef}
       style={style}
-      className="bg-columnBackgroundColor w-[350px] h-[500px] max-h-[500px] rounded-md flex flex-col"
+      className="w-[350px] h-[500px] max-h-[500px] rounded-md flex flex-col bg-columnBackgroundColor"
     >
       <div
         {...attributes}
@@ -75,8 +75,8 @@ export const ColumnContainer: React.FC<Props> = ({
         className="bg-mainBackgroundColor text-md h-[60px] cursor-grab rounded-md rounded-b-none p-3 font-bold border-columnBackgroundColor border-4 flex items-center justify-between"
       >
         <div className="flex gap-2">
-          {!editMode && column.title}
-          {editMode && (
+          {!isEditMode && column.title}
+          {isEditMode && (
             <input
               className="bg-black focus:border-indigo-500 border rounded outline-none px-2"
               value={column.title}
@@ -97,7 +97,7 @@ export const ColumnContainer: React.FC<Props> = ({
             onClick={() => {
               deleteColumn(column.selfUuid)
             }}
-            className="stroke-gray-500 hover:stroke-lilac-500 rounded px-1 py-2"
+            className="px-1 py-2 stroke-gray-500 hover:stroke-lilac-500 rounded"
           >
             <TrashIcon />
           </button>

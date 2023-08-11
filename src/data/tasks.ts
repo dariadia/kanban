@@ -1,4 +1,4 @@
-import { Column, Task } from "../../types/board"
+import { Column, Task } from "../types/board"
 
 export const defaultCols: Column[] = [
   {
