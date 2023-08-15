@@ -69,8 +69,9 @@ export const ColumnContainer: React.FC<Props> = (props) => {
       <div
         {...attributes}
         {...listeners}
-        onClick={() => {
-          setEditMode(true)
+        onClick={(event) => {
+          // @ts-ignore
+          if (event.target.nodeName === 'DIV') setEditMode(true)
         }}
         className="bg-mainBackgroundColor text-md h-[60px] cursor-grab rounded-md rounded-b-none p-3 font-bold border-columnBackgroundColor border-4 flex items-center justify-between"
       >
