@@ -126,7 +126,7 @@ export const KanbanBoard: React.FC = () => {
       columnUuid,
       inner: `Task ${tasks.length + 1}`,
     }
-    setTasks([...tasks, newTask])
+    setTasks([newTask, ...tasks ])
   }
 
   function deleteTask(uuid: ItemUuid): void {
