@@ -17,12 +17,29 @@ import { createPortal } from "react-dom"
 import { TaskCard } from "."
 import { generateUuid } from "../helpers/uuid-helper"
 import { defaultCols, defaultTasks } from "../data/tasks"
+import { 
+  defaultCols as defaultBankingCols, 
+  defaultTasks as defaultBankingTasks 
+} from "../data/banking"
 import { COLUMN, TASK } from "./constants"
 
+const getData = () => {
+  switch(window.location.pathname) {
+    case 'banking':
+      return { 
+        defaultCols: defaultBankingCols, 
+        defaultTasks: defaultBankingTasks 
+      }
+    default:
+      return { defaultCols, defaultTasks }
+  }
+}
+
 export const KanbanBoard: React.FC = () => {
-  const [columns, setColumns] = useState<Column[]>(defaultCols)
+  const data = getData()
+  const [columns, setColumns] = useState<Column[]>(data.defaultCols)
   const columnsUuid = useMemo(() => columns.map(col => col.selfUuid), [columns])
-  const [tasks, setTasks] = useState<Task[]>(defaultTasks)
+  const [tasks, setTasks] = useState<Task[]>(data.defaultTasks)
   const [isActiveColumn, setActiveColumn] = useState<Column | null>(null)
   const [isActiveTask, setActiveTask] = useState<Task | null>(null)
 
