@@ -1,13 +1,13 @@
 import { SortableContext, useSortable } from "@dnd-kit/sortable"
 import { TrashIcon, PlusIcon } from "./icons"
-import { Column, ItemUuid, Task } from "../types/board"
+import { BaseItem, Column, ItemUuid } from "../types/board"
 import { CSS } from "@dnd-kit/utilities"
 import { useMemo, useState } from "react"
 import { TaskCard } from "."
 import { COLUMN } from "./constants"
 
 type Props = {
-  tasks: Task[]
+  tasks: BaseItem[]
   column: Column
   deleteColumn: (uuid: ItemUuid) => void
   updateColumn: (uuid: ItemUuid, title: string) => void

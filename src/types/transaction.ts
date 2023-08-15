@@ -1,8 +1,8 @@
-export type Transaction = {
-  uuid: string
+import { BaseItem } from "./board"
+
+export interface Transaction extends BaseItem {
   amount: number
   currency: string
   origin: string
-  sender?: { name: string, accountNumber: number }
-  status: 'complete' | 'pending' | 'failed'
+  sender?: string
 }

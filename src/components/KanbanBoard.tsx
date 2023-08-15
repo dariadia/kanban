@@ -1,6 +1,6 @@
 import { PlusIcon } from "./icons"
 import { useMemo, useState } from "react"
-import { Column, ItemUuid, Task } from "../types/board"
+import { BaseItem, Column, ItemUuid, Task } from "../types/board"
 import { ColumnContainer } from "."
 import {
   DndContext,
@@ -25,7 +25,7 @@ import { COLUMN, TASK } from "./constants"
 
 const getData = () => {
   switch(window.location.pathname) {
-    case 'banking':
+    case '/banking':
       return { 
         defaultCols: defaultBankingCols, 
         defaultTasks: defaultBankingTasks 
@@ -39,7 +39,7 @@ export const KanbanBoard: React.FC = () => {
   const data = getData()
   const [columns, setColumns] = useState<Column[]>(data.defaultCols)
   const columnsUuid = useMemo(() => columns.map(col => col.selfUuid), [columns])
-  const [tasks, setTasks] = useState<Task[]>(data.defaultTasks)
+  const [tasks, setTasks] = useState<BaseItem[]>(data.defaultTasks)
   const [isActiveColumn, setActiveColumn] = useState<Column | null>(null)
   const [isActiveTask, setActiveTask] = useState<Task | null>(null)
 

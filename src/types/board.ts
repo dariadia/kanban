@@ -1,10 +1,14 @@
 export type ItemUuid = string
-export type Task = {
-  selfUuid: ItemUuid
-  columnUuid: ItemUuid
+export interface Task extends BaseItem {
   inner: string
 }  
 export type Column = {
   selfUuid: ItemUuid
   title: string
+}
+
+export interface BaseItem {
+  [x: string]: string | number | readonly string[] | undefined
+  selfUuid: ItemUuid
+  columnUuid: ItemUuid
 }
