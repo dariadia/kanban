@@ -62,6 +62,15 @@ export const TaskCard: React.FC<Props> = ({ task, deleteTask, updateTask }) =>  
     }
   }
 
+  const getInnerEdit = () => {
+    if (task.inner) {
+      return task.inner
+    } else {
+      const strippedHtml= `amount: ${task.currency} ${task.amount?.toLocaleString()} \nfrom: ${task.sender}  \norigin: ${task.origin}`;
+      return strippedHtml
+    }
+  }
+
   if (isEditMode) {
     return (
       <div
@@ -73,7 +82,7 @@ export const TaskCard: React.FC<Props> = ({ task, deleteTask, updateTask }) =>  
       >
         <textarea
           className="h-[90%] w-full resize-none border-none rounded bg-transparent text-white focus:outline-none"
-          value={getInner() as string}
+          value={getInnerEdit() as string}
           autoFocus
           placeholder="Task inner here"
           onBlur={toggleEditMode}
