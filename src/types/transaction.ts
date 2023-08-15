@@ -6,3 +6,11 @@ export interface Transaction extends BaseItem {
   origin: string
   sender?: string
 }
+
+export type CounterData = { 
+  totalTransactions: Transaction[], 
+  influx?: number, 
+  failed?: number, 
+  complete?: number, 
+  pending?: number 
+}
