@@ -56,7 +56,7 @@ export const TaskCard: React.FC<Props> = ({ task, deleteTask, updateTask }) =>  
       return task.inner
     } else {
       return <span>
-        <b>amount:</b> {task.amount}{task.currency}<br/ >
+        <b>amount:</b> {task.currency} {task.amount?.toLocaleString()}<br/ >
         <b>from:</b> {task.sender}<br/ >
         <b>origin:</b> {task.origin}<br/ >
       </span>
