@@ -1,12 +1,12 @@
 import { useState } from "react"
 import { TrashIcon } from "./icons"
-import { ItemUuid, Task } from "../types/board"
+import { BaseItem, ItemUuid } from "../types/board"
 import { useSortable } from "@dnd-kit/sortable"
 import { CSS } from "@dnd-kit/utilities"
 import { TASK } from "./constants"
 
 type Props = {
-  task: Task
+  task: BaseItem
   deleteTask: (uuid: ItemUuid) => void
   updateTask: (uuid: ItemUuid, inner: string) => void
 }
@@ -46,13 +46,23 @@ export const TaskCard: React.FC<Props> = ({ task, deleteTask, updateTask }) =>  
       <div
         ref={setNodeRef}
         style={style}
-        className="
-        opacity-30 bg-mainBackgroundColor p-2.5 h-[100px] min-h-[100px] items-center flex text-left rounded-xl border-2 border-indigo-500  cursor-grab relative"
+        className="opacity-30 bg-mainBackgroundColor p-2.5 h-[100px] min-h-[100px] items-center flex text-left rounded-xl border-2 border-indigo-500  cursor-grab relative"
       />
     )
   }
+  const getInner = () => {
+    if (task.inner) {
+      return task.inner
+    } else {
+      return <span>
+        <b>amount:</b> {task.currency} {task.amount?.toLocaleString()}<br/ >
+        <b>from:</b> {task.sender}<br/ >
+        <b>origin:</b> {task.origin}<br/ >
+      </span>
+    }
+  }
 
-  if (isEditMode) {
+  if (isEditMode && task.inner) {
     return (
       <div
         ref={setNodeRef}
@@ -63,7 +73,7 @@ export const TaskCard: React.FC<Props> = ({ task, deleteTask, updateTask }) =>  
       >
         <textarea
           className="h-[90%] w-full resize-none border-none rounded bg-transparent text-white focus:outline-none"
-          value={task.inner}
+          value={getInner() as string}
           autoFocus
           placeholder="Task inner here"
           onBlur={toggleEditMode}
@@ -90,7 +100,7 @@ export const TaskCard: React.FC<Props> = ({ task, deleteTask, updateTask }) =>  
       onMouseLeave={() => setMouseIsOver(false)}
     >
       <p className="my-auto h-[90%] w-full overflow-y-auto overflow-x-hidden whitespace-pre-wrap">
-        {task.inner}
+        {getInner()}
       </p>
       {isMouseOver && (
         <button

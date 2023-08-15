@@ -1,13 +1,13 @@
 import { SortableContext, useSortable } from "@dnd-kit/sortable"
 import { TrashIcon, PlusIcon } from "./icons"
-import { Column, ItemUuid, Task } from "../types/board"
+import { BaseItem, Column, ItemUuid } from "../types/board"
 import { CSS } from "@dnd-kit/utilities"
 import { useMemo, useState } from "react"
 import { TaskCard } from "."
 import { COLUMN } from "./constants"
 
 type Props = {
-  tasks: Task[]
+  tasks: BaseItem[]
   column: Column
   deleteColumn: (uuid: ItemUuid) => void
   updateColumn: (uuid: ItemUuid, title: string) => void
@@ -69,8 +69,9 @@ export const ColumnContainer: React.FC<Props> = (props) => {
       <div
         {...attributes}
         {...listeners}
-        onClick={() => {
-          setEditMode(true)
+        onClick={(event) => {
+          // @ts-ignore
+          if (event.target.nodeName === 'DIV') setEditMode(true)
         }}
         className="bg-mainBackgroundColor text-md h-[60px] cursor-grab rounded-md rounded-b-none p-3 font-bold border-columnBackgroundColor border-4 flex items-center justify-between"
       >

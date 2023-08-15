@@ -1,6 +1,6 @@
 import { PlusIcon } from "./icons"
 import { useMemo, useState } from "react"
-import { Column, ItemUuid, Task } from "../types/board"
+import { BaseItem, Column, ItemUuid, Task } from "../types/board"
 import { ColumnContainer } from "."
 import {
   DndContext,
@@ -17,15 +17,34 @@ import { createPortal } from "react-dom"
 import { TaskCard } from "."
 import { generateUuid } from "../helpers/uuid-helper"
 import { defaultCols, defaultTasks } from "../data/tasks"
-import { COLUMN, TASK } from "./constants"
+import {
+  defaultCols as defaultBankingCols,
+  defaultTasks as defaultBankingTasks
+} from "../data/banking"
+import { BANKING, COLUMN, TASK } from "./constants"
+import { BankingCounter } from "./BankingCounter"
+import { Transaction } from "../types/transaction"
+
+const getData = (tabName: string) => {
+  switch (tabName) {
+    case BANKING:
+      return {
+        defaultCols: defaultBankingCols,
+        defaultTasks: defaultBankingTasks
+      }
+    default:
+      return { defaultCols, defaultTasks }
+  }
+}
 
 export const KanbanBoard: React.FC = () => {
-  const [columns, setColumns] = useState<Column[]>(defaultCols)
+  const tabName = window.location.pathname
+  const data = getData(tabName)
+  const [columns, setColumns] = useState<Column[]>(data.defaultCols)
   const columnsUuid = useMemo(() => columns.map(col => col.selfUuid), [columns])
-  const [tasks, setTasks] = useState<Task[]>(defaultTasks)
+  const [tasks, setTasks] = useState<BaseItem[]>(data.defaultTasks)
   const [isActiveColumn, setActiveColumn] = useState<Column | null>(null)
   const [isActiveTask, setActiveTask] = useState<Task | null>(null)
-
   const sensors = useSensors(
     useSensor(PointerSensor, {
       activationConstraint: {
@@ -38,6 +57,7 @@ export const KanbanBoard: React.FC = () => {
     <div
       className="m-auto flex min-h-screen w-full items-center overflow-x-auto overflow-y-hidden px-[40px]"
     >
+      {tabName === BANKING ? <BankingCounter totalTransactions={tasks as Transaction[]} /> : <a className="bg-mainBackgroundColor p-2.5 items-center text-left rounded-xl border-2 sticky-2" href="/banking">visit banking kanban board</a>}
       <DndContext
         sensors={sensors}
         onDragStart={onDragStart}
@@ -101,12 +121,25 @@ export const KanbanBoard: React.FC = () => {
   )
 
   function createTask(columnUuid: ItemUuid): void {
-    const newTask: Task = {
-      selfUuid: generateUuid(),
-      columnUuid,
-      inner: `Task ${tasks.length + 1}`,
+    let newTask
+    if (tabName === BANKING) {
+      newTask = {
+        selfUuid: generateUuid(),
+        columnUuid,
+        amount: 0,
+        currency: "EUR",
+        origin: "Name of Bank",
+        sender: "",
+      }
+    } else {
+      newTask = {
+        selfUuid: generateUuid(),
+        columnUuid,
+        inner: `Task ${tasks.length + 1}`,
+      }
     }
-    setTasks([...tasks, newTask])
+
+    setTasks([newTask, ...tasks])
   }
 
   function deleteTask(uuid: ItemUuid): void {
@@ -116,7 +149,7 @@ export const KanbanBoard: React.FC = () => {
 
   function updateTask(uuid: ItemUuid, inner: string): void {
     const newTasks = tasks
-      .map((task) => task.selfUuid !== uuid 
+      .map((task) => task.selfUuid !== uuid
         ? task : { ...task, inner })
     setTasks(newTasks)
   }
@@ -138,7 +171,7 @@ export const KanbanBoard: React.FC = () => {
     setTasks(newTasks)
   }
 
-  function updateColumn(uuid: ItemUuid, title: string): void  {
+  function updateColumn(uuid: ItemUuid, title: string): void {
     const newColumns = columns.map((col) => {
       if (col.selfUuid !== uuid) return col
       return { ...col, title }
@@ -176,7 +209,7 @@ export const KanbanBoard: React.FC = () => {
     })
   }
 
-  function onDragOver(event: DragOverEvent): null | undefined  {
+  function onDragOver(event: DragOverEvent): null | undefined {
     const { active, over } = event
     if (!over) return null
     const activeUuid = active.id
