@@ -57,7 +57,7 @@ export const KanbanBoard: React.FC = () => {
     <div
       className="m-auto flex min-h-screen w-full items-center overflow-x-auto overflow-y-hidden px-[40px]"
     >
-      {tabName === BANKING ? <BankingCounter totalTransactions={tasks as Transaction[]} /> : <a className="bg-mainBackgroundColor p-2.5 items-center text-left rounded-xl border-2 sticky-2" href="/banking">visit banking kanban board</a>}
+      {tabName === BANKING ? <BankingCounter totalTransactions={tasks as Transaction[]} /> : null}
       <DndContext
         sensors={sensors}
         onDragStart={onDragStart}
